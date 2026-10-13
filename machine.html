@@ -133,7 +133,7 @@ cssRenderer.setSize(innerWidth,innerHeight);cssRenderer.render(scene,camera);
 /* ================= the machine ================= */
 const LABELS=[...JUKEBOX_RELEASES.slice(0,TOUCHES).map(r=>r.label.toUpperCase()),'AU HASARD','SUIVANT','PAUSE','LECTURE'];
 let jukebox=null,keyTargets=[];
-const logo=await new THREE.TextureLoader().loadAsync('./jukebox/logo-sft-gold.webp').catch(()=>null);
+const logo=await new THREE.TextureLoader().loadAsync('./assets/ia-m-flo-logo-square.svg').catch(()=>null);
 jukebox=buildJukebox({logo,labels:LABELS});
 // L'ecran peint devient un trou dans le rendu : il ecrit la profondeur (rien
 // derriere ne se dessine la) mais pas de couleur, et la video apparait au travers.
