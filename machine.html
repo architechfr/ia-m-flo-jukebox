@@ -1,18 +1,516 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#121619"><title>Le jukebox IA-M.Flo · SFT 2026</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#15100d">
+<meta name="robots" content="noindex,nofollow">
+<title>IA-M.Flo · Le jukebox</title>
+<!-- SFT 17/09, Florian : « je voulais un mode interactif avec le juke-box et
+     l'ecran YouTube integre, pas un faux ecran ». La maquette 3D (jukebox/
+     model.js) tourne ici dans son propre cadre, comme le flipper ; le lecteur
+     YouTube est une iframe posee en 3D sur l'ecran du meuble (CSS3DRenderer),
+     et les dix touches du selecteur commandent la musique. La salle (main.js,
+     jukebox-ui.js) ouvre ce cadre en arrivant a la sono ; la musique continue
+     quand on le quitte : le cadre n'est jamais vide, seulement pousse hors
+     de l'ecran, et son rendu 3D s'eteint (un seul WebGL a la fois sur un
+     telephone). Canal sft-jukebox : ready / playing vers la salle ; play,
+     show, hide depuis la salle. -->
+<script type="importmap">{"imports":{"three":"./vendor/build/three.module.js","three/addons/":"./vendor/examples/jsm/"}}</script>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{font-family:Arial,Helvetica,sans-serif;background:#121619;color:#efe6d6}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid #ffe4af;outline-offset:5px}#stage{position:absolute;inset:0}canvas{display:block;touch-action:none}header{position:absolute;left:38px;right:38px;top:30px;display:flex;align-items:flex-start;justify-content:space-between;pointer-events:none}.brand{font-size:11px;letter-spacing:.24em;color:#bda47b}.brand strong{display:block;font-weight:500;color:#f2eee5;letter-spacing:-.04em;font-size:29px;margin:10px 0 7px}.brand span{letter-spacing:.04em;font-size:12px;color:#9ba4a5}.edition{text-align:right;font-size:10px;letter-spacing:.18em;color:#bdac8e;line-height:1.8}.edition b{font-weight:400;color:#dad2c1}footer{position:absolute;bottom:28px;left:20px;right:20px;display:flex;align-items:center;flex-direction:column;gap:17px;pointer-events:none}.controls{display:flex;gap:5px;padding:7px;background:rgba(17,22,25,.88);border:1px solid #45423b;border-radius:40px;pointer-events:auto;backdrop-filter:blur(12px)}.controls button{padding:11px 16px;border:0;background:transparent;border-radius:30px;color:#c6c8c5;font-size:12px;white-space:nowrap}.controls button[aria-pressed=true]{background:#e0bb7c;color:#191b1c}.controls button:hover{background:#3b3a35;color:#fff}.separator{width:1px;background:#424039;margin:7px 3px}.help{font-size:11px;letter-spacing:.055em;color:#a0a7a8}#notice{position:absolute;left:50%;bottom:137px;transform:translate(-50%,8px);opacity:0;transition:opacity .2s,transform .2s;padding:13px 20px;background:#191f21;border:1px solid #7b6848;border-radius:10px;pointer-events:none;font-size:13px;text-align:center;max-width:90vw}#notice.shown{opacity:1;transform:translate(-50%,0)}#loading{position:absolute;inset:45% 10% auto;text-align:center;color:#cfb38a;font-size:14px;letter-spacing:.06em}dialog{background:#1c2224;color:#ece6dc;border:1px solid #66553d;border-radius:18px;padding:28px;max-width:min(430px,90vw);box-shadow:0 30px 100px #0008}dialog::backdrop{background:#0009;backdrop-filter:blur(5px)}dialog h2{font-weight:500;font-size:22px;margin:0 0 16px;letter-spacing:-.03em}dialog p{font-size:14px;line-height:1.6;color:#c2c6c5}dialog button{border:1px solid #675b44;border-radius:8px;padding:12px 15px;background:#33332e}dialog .close{width:100%;margin-top:19px;background:#dfbc83;color:#1a1c1d}#genres{display:grid;grid-template-columns:1fr 1fr;gap:8px}#genres button{font-size:12px}#genres button:hover{background:#80613b}.sr-only{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}@media(max-width:620px){header{left:22px;right:22px;top:23px}.brand strong{font-size:24px}.brand span{font-size:11px}.edition{font-size:9px}footer{bottom:max(20px,env(safe-area-inset-bottom));gap:12px;left:8px;right:8px}.controls{gap:1px;padding:5px}.controls button{font-size:11px;padding:12px 10px}.separator{margin:8px 2px}.help{font-size:10px}.optional{display:none}#notice{bottom:132px}}@media(max-width:370px){.controls button{padding:12px 7px}.brand strong{font-size:21px}.edition{display:none}}
-</style></head>
+:root{color-scheme:dark}
+html,body{margin:0;height:100%;background:#15100d;overflow:hidden;font-family:Georgia,serif;color:#f5ebd8}
+#stage{position:fixed;inset:0;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+#stage:active{cursor:grabbing}
+/* La video (CSS3D) est SOUS le canvas WebGL, qui est perce a l'endroit de la
+   vitrine (materiau sans couleur, voir plus bas) : lunette, chromes et vitre
+   passent devant elle. Le canvas laisse passer les gestes vers la page. */
+#stage canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block;z-index:2;pointer-events:none}
+#css{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
+.yt{width:560px;height:315px;background:#050505;pointer-events:auto;backface-visibility:hidden}
+.yt iframe{display:block;width:100%;height:100%;border:0}
+#now{position:fixed;left:50%;bottom:calc(52px + max(10px,env(safe-area-inset-bottom)));transform:translateX(-50%);z-index:3;transition:opacity .25s;width:min(92vw,560px);text-align:center;pointer-events:none;text-shadow:0 2px 12px #000}
+#now strong{display:block;font:400 clamp(16px,2.6vw,22px)/1.25 Georgia,serif;color:#f7d79d;letter-spacing:.3px}
+#now span{display:block;margin-top:5px;font:400 12px/1.4 Arial,sans-serif;color:#c9b998;letter-spacing:.4px}
+#start{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;min-height:48px;padding:12px 26px;border:1px solid #f0d287;border-radius:6px;background:linear-gradient(135deg,#f1c76a,#b8892f);color:#1a1208;font:700 14px Arial,sans-serif;letter-spacing:1px;cursor:pointer}
+#start[hidden]{display:none}
+/* La barre du bas : le lien du titre (Florian, 19/09, n'a pas pu l'attraper sur
+   l'ecran) et la demande de son au CIO. Deux boutons, jamais plus. */
+#tools{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;display:flex;gap:8px}
+#tools button{min-height:36px;padding:0 13px;border:1px solid rgba(240,210,135,.5);border-radius:999px;background:rgba(11,8,6,.82);color:#f0d4ab;font:400 12.5px Arial,sans-serif;letter-spacing:.3px;cursor:pointer;backdrop-filter:blur(6px)}
+#tools button b{font-weight:700;color:#ffd79a}
+#carnet{position:fixed;inset:0;z-index:6;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,4,3,.72);backdrop-filter:blur(3px)}
+#carnet[hidden]{display:none}
+#carnet .boite{width:min(96vw,520px);max-height:86vh;overflow:auto;margin:0 0 max(8px,env(safe-area-inset-bottom));padding:16px 16px 18px;border:1px solid rgba(240,210,135,.45);border-radius:14px;background:#120d0a;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+#carnet h2{margin:0 0 6px;font:400 13px/1.3 Arial,sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#c9a464}
+#carnet h2+*{margin-top:0}
+#carnet .titre{margin:0 0 8px;font:400 18px/1.3 Georgia,serif;color:#f7d79d}
+#carnet .lien{display:block;margin:0 0 10px;font:400 13px/1.4 Arial,sans-serif;color:#9fd0ff;word-break:break-all}
+#carnet .rangee{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+#carnet button,#carnet .bouton{min-height:40px;padding:0 14px;border:1px solid rgba(240,210,135,.5);border-radius:8px;background:rgba(240,210,135,.1);color:#f0d4ab;font:400 13px Arial,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+#carnet .fort{background:linear-gradient(135deg,#f1c76a,#b8892f);color:#1a1208;font-weight:700;border-color:#f0d287}
+#carnet .separe{margin:0 0 14px;border:0;border-top:1px solid rgba(240,210,135,.2)}
+#carnet form{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+#carnet input{flex:1 1 180px;min-height:40px;padding:0 10px;border:1px solid rgba(240,210,135,.35);border-radius:8px;background:#1b1410;color:#f5ebd8;font:400 14px Arial,sans-serif}
+#carnet .dit{margin:0 0 10px;font:400 12.5px/1.45 Arial,sans-serif;color:#c9b998;min-height:1px}
+#carnet .dit.vert{color:#8fd7a0}
+#carnet ul{list-style:none;margin:0;padding:0}
+#carnet li{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid rgba(240,210,135,.14);font:400 13px/1.35 Arial,sans-serif;color:#e8dcc4}
+#carnet li span{flex:1;min-width:0}
+#carnet li em{font-style:normal;color:#c9a464}
+#carnet li.servie span{color:#8a8070;text-decoration:line-through}
+#carnet li button{min-height:30px;padding:0 9px;font-size:12px}
+#carnet-fermer{position:sticky;top:0;float:right;min-height:32px;padding:0 10px;margin:-6px -6px 0 8px}
+</style>
+</head>
 <body>
-<main id="stage"></main>
-<header><div class="brand">IA-M.FLO / MUSIC<strong>Le jukebox IA-M.Flo</strong><span>Noyer, chrome & lumière.</span></div><div class="edition">CAMPAGNAN · 2026<br><b>MODÈLE 3D</b><br><span id="dimensions"></span></div></header>
-<div id="loading">Préparation du jukebox…</div>
-<div id="notice" role="status" aria-live="polite"></div>
-<footer><div class="controls" role="group" aria-label="Commandes de l’aperçu"><button data-view="front" aria-pressed="false">Face</button><button data-view="angle" aria-pressed="true">3/4</button><button data-view="rear" aria-pressed="false">Dos</button><span class="separator" aria-hidden="true"></span><button id="turn" aria-pressed="false">Tourner</button><button id="lights" aria-pressed="true">Lumières</button><button id="ambience" class="optional">Ambiances</button></div><div class="help">Faire glisser pour tourner · Pincer ou défiler pour zoomer · Boutons interactifs</div></footer>
-<dialog id="ambience-dialog"><h2>Choisis ton ambiance</h2><div id="genres"></div><button class="close" data-close>Revenir au jukebox</button></dialog>
-<dialog id="player-dialog"><h2>L’écran du Club</h2><p>Choisis un titre dans le catalogue pour écouter la musique.</p><p>Ambiance sélectionnée : <strong id="selection">GOOD VIBES</strong></p><button class="close" data-close>Revenir au jukebox</button></dialog>
-<script src="dist/viewer.js"></script><script>document.getElementById('player-dialog').showModal=()=>parent.postMessage({type:'jukebox-play'},location.origin);document.getElementById('ambience').hidden=true;</script>
-</body></html>
+<div id="stage"></div>
+<p id="now"><strong id="now-title">Le jukebox IA-M.Flo</strong><span id="now-hint">La musique de IA-M.Flo. Touche un album ; glisse pour faire le tour du meuble, pince pour t’approcher.</span></p>
+<button id="start" type="button" hidden>Lancer la musique</button>
+<div id="tools">
+  <button id="tool-link" type="button">🔗 Le lien du titre</button>
+  <button id="tool-ask" type="button" hidden>Catalogue</button>
+</div>
+<div id="carnet" hidden role="dialog" aria-label="Le titre et les demandes au CIO">
+  <div class="boite">
+    <button id="carnet-fermer" type="button" aria-label="Fermer">✕</button>
+    <h2>Ce qui tourne</h2>
+    <p class="titre" id="carnet-titre">—</p>
+    <a class="lien" id="carnet-lien" href="https://www.youtube.com/" target="_blank" rel="noopener">—</a>
+    <div class="rangee">
+      <button id="carnet-copier" type="button">Copier le lien</button>
+      <a class="bouton" id="carnet-ouvrir" href="https://www.youtube.com/" target="_blank" rel="noopener">Ouvrir sur YouTube</a>
+    </div>
+    <div hidden><hr class="separe">
+    <h2>Demander un son au CIO</h2>
+    <form id="carnet-form">
+      <input id="carnet-texte" type="text" maxlength="140" autocomplete="off" placeholder="Un titre, un artiste, ou un lien YouTube" aria-label="Le son que tu demandes">
+      <button class="fort" type="submit">Envoyer</button>
+    </form>
+    <p class="dit" id="carnet-dit" role="status">Le CIO tient la sono : dis-lui ce que tu veux entendre.</p>
+    <ul id="carnet-liste"></ul>
+    </div><div id="carnet-cio" hidden>
+      <hr class="separe">
+      <h2>Ajouter au juke-box · CIO</h2>
+      <form id="cio-form">
+        <input id="cio-lien" type="url" inputmode="url" autocomplete="off" placeholder="Le lien YouTube du titre ou de l’album" aria-label="Le lien YouTube">
+        <input id="cio-nom" type="text" maxlength="80" autocomplete="off" placeholder="Le nom sur la façade" aria-label="Le nom du titre">
+        <button class="fort" type="submit">Ajouter</button>
+      </form>
+      <p class="dit" id="cio-dit" role="status">Colle un lien : le nom se remplit tout seul. Le titre part dans la file — AU HASARD et SUIVANT le passeront.</p>
+      <ul id="cio-liste"></ul>
+    </div>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import {CSS3DRenderer,CSS3DObject} from 'three/addons/renderers/CSS3DRenderer.js';
+import {buildJukebox,SCREEN} from './model.js';
+import {JUKEBOX_RELEASES,TOUCHES,jukeboxSrc,pictureSrc,watchUrl,parseYouTube} from './releases.js';
+
+const CHANNEL='sft-jukebox',embedded=window.parent!==window,origin=window.location.origin;
+const $=s=>document.querySelector(s);
+const stage=$('#stage'),nowTitle=$('#now-title'),nowHint=$('#now-hint'),startButton=$('#start');
+const send=data=>{if(embedded)window.parent.postMessage({channel:CHANNEL,...data},origin);};
+
+/* ================= scene, camera, CSS3D (synchronous, before any music) ================= */
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(32,1,0.05,60);
+const target=new THREE.Vector3(0,0.72,0);
+// The player's iframe lives in this wrapper. CSS3DRenderer moves the wrapper
+// into its own camera element on the first render: that has to happen before
+// the iframe gets a src, or the move would reload it and cut the music.
+const wrapper=document.createElement('div');wrapper.className='yt';
+const player=document.createElement('iframe');player.title='Le juke-box · IA-M.Flo sur YouTube';player.setAttribute('allow','autoplay; encrypted-media; fullscreen');player.referrerPolicy='strict-origin-when-cross-origin';
+wrapper.appendChild(player);
+const playerObject=new CSS3DObject(wrapper);
+playerObject.position.copy(SCREEN.center).add(new THREE.Vector3(0,0,0.004));
+playerObject.scale.setScalar(SCREEN.width/560);
+scene.add(playerObject);
+const cssRenderer=new CSS3DRenderer();cssRenderer.domElement.id='css';stage.appendChild(cssRenderer.domElement);
+cssRenderer.setSize(innerWidth,innerHeight);cssRenderer.render(scene,camera);
+
+/* ================= the machine ================= */
+const LABELS=[...JUKEBOX_RELEASES.slice(0,TOUCHES).map(r=>r.label.toUpperCase()),'AU HASARD','SUIVANT','PAUSE','LECTURE'];
+let jukebox=null,keyTargets=[];
+const logo=await new THREE.TextureLoader().loadAsync('./jukebox/logo-sft-gold.webp').catch(()=>null);
+jukebox=buildJukebox({logo,labels:LABELS});
+// L'ecran peint devient un trou dans le rendu : il ecrit la profondeur (rien
+// derriere ne se dessine la) mais pas de couleur, et la video apparait au travers.
+jukebox.screen.material=new THREE.MeshBasicMaterial({colorWrite:false});
+jukebox.screen.renderOrder=-1; // avant la lunette juste derriere, sinon elle remplit le trou
+scene.add(jukebox.group);
+// SFT 19/09, Florian : « au sol, un logo, ca serait plus sympa sous le juke-box
+// plutot que tout noir ». Le medaillon dore, a plat sous le meuble : la texture
+// est recadree (repeat/offset) pour que le bord du disque tombe sur l'anneau
+// d'or, sans le carre noir de l'image autour.
+if(logo){
+  const sol=logo.clone();sol.repeat.set(0.9,0.9);sol.offset.set(0.05,0.05);sol.needsUpdate=true;
+  const medaillon=new THREE.Mesh(new THREE.CircleGeometry(1.12,96),new THREE.MeshStandardMaterial({map:sol,emissive:0xffffff,emissiveMap:sol,emissiveIntensity:0.32,roughness:0.38,metalness:0.55}));
+  medaillon.name='solLogo';medaillon.rotation.x=-Math.PI/2;medaillon.position.set(0,0.002,0.04);scene.add(medaillon);
+}
+keyTargets=jukebox.keys.flatMap(k=>[k.key,k.button]);
+
+/* ================= music ================= */
+// La sono de l'app (index.html, canal sft-sono) : quand le Club se ferme, elle
+// reprend l'album la ou il en etait ; quand il rouvre, elle nous rend la main.
+// On lui dit toutes les deux secondes ou on en est (les nouvelles du lecteur
+// YouTube arrivent par infoDelivery, une fois qu'on s'est annonce a lui).
+// SFT 18/09 : ce meuble ne fait plus de son. L'app (index.html) est le seul
+// lecteur, et il ne s'arrete jamais -- c'est ce qui supprime les micro-coupures
+// et les deux YouTube qui tournaient ensemble. Ici on ne garde que l'IMAGE, en
+// sourdine, calee sur ce que l'app nous dit jouer ; les touches lui parlent.
+const SONO='sft-sono',YT='https://www.youtube-nocookie.com',top=window.top!==window?window.top:null;
+let current=null,progress={time:0,index:0,state:-1};
+// Ce que montre l'ecran, par sa propre bouche : quelle video, quelle seconde,
+// quel etat. Florian, 19/09 : « sur l'ecran du juke-box on etait au debut de
+// la chanson alors que dans l'audio on etait a la fin ». Les deux valeurs
+// vivaient dans le MEME objet : impossible de voir la derive, donc impossible
+// de la corriger -- et dans un album l'ecran ne rechargeait jamais (meme
+// sortie du debut a la fin), il avancait dans la liste de son cote pendant
+// que l'app avancait du sien. On les separe, et on les recolle.
+let picture={video:'',time:0,state:-1},lastSeek=0,lastPoke=0;
+const ask=(type,extra={})=>{if(top)top.postMessage({channel:SONO,type,...extra},origin);};
+function listenPlayer(){try{player.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),YT);}catch{}}
+function tellPlayer(func,args=[]){try{player.contentWindow.postMessage(JSON.stringify({event:'command',func,args}),YT);}catch{}}
+player.addEventListener('load',listenPlayer);
+setInterval(()=>{if(current)send({type:'tick',playing:progress.state===1});if(shown)listenPlayer();},2000);
+// L'image suit l'app : meme video, meme seconde, sans un bruit.
+function loadPicture(src,video){
+  player.src=src;picture={video:video||'',time:0,state:-1};lastSeek=lastPoke=performance.now();
+}
+function syncPicture(state){
+  // L'ecran joue deja la bonne video : on ne la recharge pas (ce serait un
+  // trou noir d'une seconde a chaque fois), on la remet a l'heure.
+  const now=performance.now();
+  if(!state.playing){
+    if(picture.state===1||picture.state===3)tellPlayer('pauseVideo');
+    return;
+  }
+  // 1 = joue, 3 = charge. Tout le reste (pas demarre, en pause, fini) : on
+  // relance -- un telephone refuse parfois de lancer une image toute seule.
+  if(picture.state!==1&&picture.state!==3&&now-lastPoke>2000){lastPoke=now;tellPlayer('playVideo');}
+  if(Math.abs(picture.time-(state.time||0))>2.5&&now-lastSeek>4000){
+    lastSeek=now;tellPlayer('seekTo',[state.time||0,true]);
+  }
+}
+function showRelease(state){
+  if(!state){current=null;picture={video:'',time:0,state:-1};jukebox.setActiveKey(-1);startButton.hidden=false;majCarnet('',' ');draw();return;}
+  const release=JUKEBOX_RELEASES.find(r=>r.id===state.id)||{kind:state.kind,id:state.id,label:state.label};
+  // L'app nous dit QUELLE video elle joue (et non plus seulement quel album) :
+  // l'ecran ne charge plus la liste entiere, il charge ce morceau-la, a cette
+  // seconde-la. Elle parle toutes les 1,5 s, et la seconde change a chaque
+  // fois : on ne recharge donc que quand la video change, ou quand l'ecran
+  // etait eteint (retour au gros plan). Le reste du temps, on rattrape.
+  const voulue=state.video||'';
+  const vierge=!player.getAttribute('src')||player.getAttribute('src')==='about:blank';
+  if(shown){
+    if(vierge){
+      // L'app vient peut-etre de changer d'album et n'a pas encore de nouvelles
+      // de son propre lecteur : on met la sortie, le temps qu'elle apprenne.
+      if(voulue)loadPicture(pictureSrc(voulue,origin,state.time||0),voulue);
+      else loadPicture(jukeboxSrc(release,origin,{index:state.index,time:state.time},true),'');
+    }
+    else if(voulue&&picture.video&&voulue!==picture.video)loadPicture(pictureSrc(voulue,origin,state.time||0),voulue);
+    else if(voulue&&picture.video===voulue)syncPicture(state);
+  }
+  current=release;progress={time:state.time||0,index:state.index||0,state:state.playing?1:2};
+  // Au-dela des touches, aucune ne s'allume : sinon on eclairerait AU HASARD.
+  const key=JUKEBOX_RELEASES.indexOf(release);jukebox.setActiveKey(key<TOUCHES?key:-1);
+  const titre=state.title||release.label;
+  nowTitle.textContent='♪ '+titre;
+  nowHint.textContent='IA-M.Flo · touche un titre, ou SUIVANT pour continuer.';
+  startButton.hidden=true;
+  majCarnet(titre,watchUrl(release,state.video||''));
+  // SFT 30/09 : le titre et la lecture en plus, pour la radio de Sales Fils City (club3d/city-ui.js).
+  send({type:'playing',id:release.id,label:release.label,title:state.title||'',playing:!!state.playing});
+  draw();
+}
+function pressKey(index){
+  const k=jukebox.keys[index];if(!k)return;
+  k.key.position.z=k.restZ-0.006;k.button.position.z=k.restZ-0.006;
+  setTimeout(()=>{k.key.position.z=k.restZ;k.button.position.z=k.restZ;draw();},130);
+  if(index<TOUCHES)ask('play',{id:JUKEBOX_RELEASES[index].id});
+  // AU HASARD : c'est l'app qui tire, pas nous -- elle seule connait la file
+  // entiere (les six touches, le reste du code, et ce que le CIO a ajoute).
+  else if(index===6)ask('play',{random:true});
+  else if(index===7)ask('step',{dir:1});
+  else if(index===8){ask('command',{func:'pauseVideo'});nowHint.textContent='En pause · LECTURE pour reprendre.';}
+  else if(index===9)ask('command',{func:'playVideo'});
+  draw();
+}
+startButton.addEventListener('click',()=>ask('play',{random:true}));
+
+/* ================= le lien du titre, et les demandes au CIO ================= */
+// Florian, 19/09 : « je suis alle sur l'ecran du juke-box pour recuperer le
+// lien de la chanson, ca ne marchait pas ». C'est une video YouTube dans une
+// iframe, dans une iframe, posee en 3D : ce qu'on y touche n'appartient pas a
+// la page. On donne donc l'adresse en clair, a copier ou a ouvrir.
+// Et : « l'utilisateur devrait pouvoir faire une demande de son aupres du
+// CIO ». Le juke-box ne parle pas a la base -- il passe par l'app, seule a
+// tenir la session (canal sft-sono).
+const carnet=$('#carnet'),carnetDit=$('#carnet-dit'),carnetListe=$('#carnet-liste'),carnetTexte=$('#carnet-texte'),toolAsk=$('#tool-ask');
+let lienCourant='',jeSuisCio=false;
+function majCarnet(titre,url){
+  lienCourant=url&&url.trim()?url:'';
+  $('#carnet-titre').textContent=titre||'—';
+  const lien=$('#carnet-lien'),ouvrir=$('#carnet-ouvrir');
+  lien.textContent=lienCourant||'—';
+  if(lienCourant){lien.href=lienCourant;ouvrir.href=lienCourant;}
+}
+function dire(texte,vert){carnetDit.textContent=texte;carnetDit.classList.toggle('vert',!!vert);}
+function ouvrirCarnet(saisir){
+  carnet.hidden=false;ask('requests');
+  if(saisir)setTimeout(()=>carnetTexte.focus(),80);
+}
+function rendreDemandes(list){
+  const attente=list.filter(d=>!d.servi).length;
+  toolAsk.textContent='🎙️ Demander un son'+(attente?' · '+attente:'');
+  carnetListe.textContent='';
+  for(const demande of list){
+    const li=document.createElement('li');if(demande.servi)li.className='servie';
+    const ligne=document.createElement('span'),qui=document.createElement('em');
+    qui.textContent=(demande.prenom||'Quelqu’un')+' : ';
+    ligne.appendChild(qui);ligne.appendChild(document.createTextNode(demande.texte||''));
+    li.appendChild(ligne);
+    if(jeSuisCio&&!demande.servi){
+      const fait=document.createElement('button');fait.type='button';fait.textContent='✓ servi';
+      fait.addEventListener('click',()=>{fait.disabled=true;ask('served',{id:demande.id});});
+      li.appendChild(fait);
+    }
+    carnetListe.appendChild(li);
+  }
+}
+$('#tool-link').addEventListener('click',()=>ouvrirCarnet(false));
+toolAsk.addEventListener('click',()=>ouvrirCarnet(true));
+$('#carnet-fermer').addEventListener('click',()=>{carnet.hidden=true;});
+carnet.addEventListener('click',event=>{if(event.target===carnet)carnet.hidden=true;});
+$('#carnet-copier').addEventListener('click',()=>{
+  if(!lienCourant){dire('Attends que le titre s’affiche.');return;}
+  const fini=()=>dire('Le lien est copié.',true);
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(lienCourant).then(fini,()=>dire('Copie refusée : appuie longuement sur l’adresse, juste au-dessus.'));
+  else dire('Copie refusée : appuie longuement sur l’adresse, juste au-dessus.');
+});
+$('#carnet-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  const texte=carnetTexte.value.trim();
+  if(!texte){carnetTexte.focus();return;}
+  dire('On porte la demande au CIO…');ask('request',{text:texte});
+});
+
+/* -------- le CIO ajoute un son (lui seul voit ce bloc) -------- */
+// Florian, 19/09 : « il serait normal que le CIO puisse ajouter un titre
+// musical via un lien YouTube ». Le catalogue etait ecrit dans le code : un
+// titre de plus demandait un deploiement. Ce qu'il ajoute ici part dans la
+// table sono_sorties et rejoint la file (AU HASARD, SUIVANT). Les six touches
+// du meuble, elles, restent peintes sur la facade.
+const cioBloc=$('#carnet-cio'),cioLien=$('#cio-lien'),cioNom=$('#cio-nom'),cioDit=$('#cio-dit'),cioListe=$('#cio-liste');
+let cioAttente=0,cioVu='';
+function direCio(texte,vert){cioDit.textContent=texte;cioDit.classList.toggle('vert',!!vert);}
+// Le nom se remplit tout seul : YouTube le donne par son oEmbed, qui est
+// ouvert a tous. S'il refuse, le CIO tape le nom lui-meme.
+function nomAuto(){
+  const lu=parseYouTube(cioLien.value);
+  if(!lu||cioVu===lu.id)return;
+  cioVu=lu.id;
+  const url=lu.kind==='playlist'?'https://www.youtube.com/playlist?list='+lu.id:'https://youtu.be/'+lu.id;
+  fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent(url))
+    .then(reponse=>reponse.ok?reponse.json():null)
+    .then(info=>{if(info&&info.title&&!cioNom.value.trim()){cioNom.value=info.title;direCio('YouTube l’appelle « '+info.title+' ». À toi de voir.');}})
+    .catch(()=>{});
+}
+cioLien.addEventListener('input',()=>{clearTimeout(cioAttente);cioAttente=setTimeout(nomAuto,400);});
+$('#cio-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  const lu=parseYouTube(cioLien.value);
+  if(!lu){direCio('Ce lien-là, on n’en tire rien. Un lien de titre ou d’album YouTube.');cioLien.focus();return;}
+  const nom=cioNom.value.trim();
+  if(!nom){direCio('Donne-lui un nom : c’est ce qui s’affichera.');cioNom.focus();return;}
+  direCio('On l’ajoute à la file…');
+  ask('add',{kind:lu.kind,ref:lu.id,label:nom});
+});
+function rendreSorties(sorties){
+  cioListe.textContent='';
+  for(const sortie of sorties){
+    const li=document.createElement('li'),nom=document.createElement('span');
+    nom.textContent=sortie.label;
+    if(sortie.kind==='playlist'){const quoi=document.createElement('em');quoi.textContent=' · album';nom.appendChild(quoi);}
+    li.appendChild(nom);
+    const jouer=document.createElement('button');jouer.type='button';jouer.textContent='▶';
+    jouer.setAttribute('aria-label','Jouer '+sortie.label);
+    jouer.addEventListener('click',()=>{ask('play',{id:sortie.ref});carnet.hidden=true;});
+    li.appendChild(jouer);
+    const oter=document.createElement('button');oter.type='button';oter.textContent='✕';
+    oter.setAttribute('aria-label','Retirer '+sortie.label);
+    oter.addEventListener('click',()=>{oter.disabled=true;ask('remove',{id:sortie.id});});
+    li.appendChild(oter);
+    cioListe.appendChild(li);
+  }
+}
+
+/* ================= WebGL: only while the frame is on screen ================= */
+let renderer=null,envTexture=null,frame=0,shown=false,lastTime=0;
+function buildEnvironment(){
+  // Warm studio: gradient dome and four softboxes, as in the maquette.
+  const env=new THREE.Scene();
+  const c=document.createElement('canvas');c.width=16;c.height=256;const g=c.getContext('2d');
+  const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#5a4636');gr.addColorStop(0.55,'#241a14');gr.addColorStop(1,'#0b0806');
+  g.fillStyle=gr;g.fillRect(0,0,16,256);
+  const gradTex=new THREE.CanvasTexture(c);gradTex.colorSpace=THREE.SRGBColorSpace;
+  env.add(new THREE.Mesh(new THREE.SphereGeometry(40,16,12),new THREE.MeshBasicMaterial({map:gradTex,side:THREE.BackSide})));
+  const panel=(w,h,color,pos)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide}));m.position.set(...pos);m.lookAt(0,1,0);env.add(m);};
+  panel(6,3,0xfff1d6,[4,6,5]);panel(4,6,0xffd9a8,[-7,3,4]);panel(8,2,0x8fb2d8,[0,5,-8]);panel(3,1.2,0xffb070,[6,1.2,-3]);
+  const pmrem=new THREE.PMREMGenerator(renderer);
+  const texture=pmrem.fromScene(env,0.03).texture;
+  pmrem.dispose();gradTex.dispose();
+  return texture;
+}
+function show(){
+  if(shown)return;shown=true;
+  renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x000000,0);
+  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.95;
+  renderer.domElement.addEventListener('webglcontextlost',event=>event.preventDefault());
+  stage.insertBefore(renderer.domElement,cssRenderer.domElement);
+  envTexture=buildEnvironment();scene.environment=envTexture;scene.environmentIntensity=0.7;
+  resize();lastTime=performance.now();draw();
+}
+function hide(){
+  if(!shown)return;shown=false;
+  // L'image ne sert plus a rien hors du gros plan : on la coupe pour ne pas
+  // telecharger une video que personne ne regarde. Le son, lui, est dans
+  // l'app et continue.
+  if(player.getAttribute('src'))player.src='about:blank';
+  picture={video:'',time:0,state:-1};
+  cancelAnimationFrame(frame);frame=0;
+  scene.environment=null;envTexture?.dispose();envTexture=null;
+  renderer.dispose();try{renderer.forceContextLoss();}catch{}
+  renderer.domElement.remove();renderer=null;
+}
+function resize(){
+  const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;
+  camera.aspect=w/h;camera.updateProjectionMatrix();
+  cssRenderer.setSize(w,h);renderer?.setSize(w,h,false);
+  fit();draw();
+}
+addEventListener('resize',resize);
+
+/* ================= a hand on the machine ================= */
+// Florian, 17/09 : « ce qui est sympa, c'est de tourner autour, pas de le faire
+// tourner ». Le meuble ne bouge pas tout seul : on glisse pour en faire le tour.
+// Florian, 18/09 : « zoomer encore davantage pour bien lire les choix ». De
+// pres (zoom < 0.7), glisser de haut en bas parcourt le meuble -- vitrine,
+// touches, grille -- au lieu de basculer la vue.
+const ZOOM_MIN=0.3;
+let theta=0,phi=1.32,zoom=1,baseDistance=3;
+function fit(){
+  // The whole cabinet, margins included, whatever the screen shape.
+  const radius=1.0,vertical=THREE.MathUtils.degToRad(camera.fov/2);
+  const horizontal=Math.atan(Math.tan(vertical)*camera.aspect);
+  baseDistance=radius/Math.sin(Math.min(vertical,horizontal))*1.02;
+}
+function placeCamera(){
+  const distance=baseDistance*zoom;
+  camera.position.set(target.x+distance*Math.sin(phi)*Math.sin(theta),target.y+distance*Math.cos(phi),target.z+distance*Math.sin(phi)*Math.cos(theta));
+  camera.lookAt(target);
+}
+function draw(){if(shown&&!frame)frame=requestAnimationFrame(tick);}
+function tick(now){
+  frame=0;if(!shown)return;
+  jukebox.pulse(now/1000,progress.state===1); // les neons respirent tant que ca joue
+  $('#now').style.opacity=zoom<0.7?'0':'1'; // de pres, la legende recouvrirait les touches
+  placeCamera();
+  renderer.render(scene,camera);cssRenderer.render(scene,camera);
+  if(current)draw(); // la lumiere bouge : on continue de dessiner
+}
+const pointers=new Map();let press=null;
+stage.addEventListener('pointerdown',event=>{
+  if(event.target!==stage&&event.target!==cssRenderer.domElement)return;
+  stage.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+  press={x:event.clientX,y:event.clientY,t:performance.now(),moved:false};
+});
+stage.addEventListener('pointermove',event=>{
+  const p=pointers.get(event.pointerId);if(!p)return;
+  const dx=event.clientX-p.x,dy=event.clientY-p.y;
+  if(pointers.size===1){
+    theta-=dx*0.005*Math.min(1,zoom+0.3);
+    if(zoom<0.7)target.y=THREE.MathUtils.clamp(target.y+dy*0.0022*zoom,0.2,1.45);
+    else phi=THREE.MathUtils.clamp(phi-dy*0.005,0.85,1.66);
+  }else if(pointers.size===2){
+    const [a,b]=[...pointers.values()];const before=Math.hypot(a.x-b.x,a.y-b.y);
+    p.x=event.clientX;p.y=event.clientY;
+    const [c,d]=[...pointers.values()];const after=Math.hypot(c.x-d.x,c.y-d.y);
+    if(before>0)zoom=THREE.MathUtils.clamp(zoom*before/after,ZOOM_MIN,1.6);
+    draw();return;
+  }
+  p.x=event.clientX;p.y=event.clientY;
+  if(press&&Math.hypot(event.clientX-press.x,event.clientY-press.y)>7)press.moved=true;
+  draw();
+});
+function release(event){
+  pointers.delete(event.pointerId);
+  if(press&&!press.moved&&performance.now()-press.t<400&&pointers.size===0)tap(event.clientX,event.clientY);
+  if(pointers.size===0)press=null;
+}
+for(const name of ['pointerup','pointercancel','lostpointercapture'])stage.addEventListener(name,release);
+stage.addEventListener('wheel',event=>{event.preventDefault();zoom=THREE.MathUtils.clamp(zoom*(event.deltaY>0?1.08:0.93),ZOOM_MIN,1.6);draw();},{passive:false});
+const raycaster=new THREE.Raycaster(),ndc=new THREE.Vector2();
+function tap(x,y){
+  if(!renderer||!jukebox)return;
+  const r=stage.getBoundingClientRect();ndc.set(((x-r.left)/r.width)*2-1,-((y-r.top)/r.height)*2+1);
+  raycaster.setFromCamera(ndc,camera);
+  const hit=raycaster.intersectObjects(keyTargets,false)[0];if(!hit)return;
+  const k=jukebox.keys.find(k=>k.key===hit.object||k.button===hit.object);if(k)pressKey(k.index);
+}
+
+/* ================= the room, the app and the player talk to the machine ================= */
+addEventListener('message',event=>{
+  // Les nouvelles du lecteur YouTube : seconde en cours, piste, etat (2 = pause, 0 = fini).
+  if(event.source===player.contentWindow&&event.origin===YT){
+    let info;try{info=typeof event.data==='string'?JSON.parse(event.data):event.data;}catch{return;}
+    if(info?.event!=='infoDelivery'||!info.info)return;
+    // Ce sont les nouvelles de L'IMAGE, pas de la musique : elles vont dans
+    // `picture`, et c'est en les comparant a celles de l'app qu'on recolle.
+    if(typeof info.info.currentTime==='number')picture.time=info.info.currentTime;
+    if(typeof info.info.playerState==='number')picture.state=info.info.playerState;
+    if(info.info.videoData&&info.info.videoData.video_id)picture.video=info.info.videoData.video_id;
+    return;
+  }
+  if(event.origin!==origin)return;
+  const data=event.data;if(!data)return;
+  // L'app nous dit ce qu'elle joue : on cale l'image dessus.
+  if(top&&event.source===top&&data.channel===SONO){
+    if(data.type==='now')showRelease(data.state);
+    else if(data.type==='requests'){
+      jeSuisCio=!!data.admin;rendreDemandes(data.list||[]);
+      cioBloc.hidden=!jeSuisCio;
+      if(jeSuisCio)rendreSorties(data.sorties||[]);
+    }
+    else if(data.type==='request-done'){
+      if(data.ok){carnetTexte.value='';dire(data.message||'C’est noté, le CIO l’a sur son carnet.',true);}
+      else dire(data.message||'Le CIO n’a pas pris la demande.');
+    }
+    else if(data.type==='add-done'){
+      if(data.ok){cioLien.value='';cioNom.value='';cioVu='';direCio(data.message||'Il est dans la file.',true);}
+      else direCio(data.message||'Il n’est pas passé.');
+    }
+    return;
+  }
+  if(!embedded||event.source!==window.parent||data.channel!==CHANNEL)return;
+  // La salle demande de la musique en arrivant : ce n'est pas a nous de
+  // decider s'il faut en lancer. Nous ne savons ce que joue l'app que par son
+  // message `now`, qui peut arriver APRES celui de la salle -- on coupait
+  // alors la musique en cours pour un album au hasard (Florian, 19/09 : « on
+  // passe a une autre des qu'on arrive »). On passe la demande a l'app, seule
+  // a savoir ce qui tourne ; elle tire au hasard hors des dernieres ecoutees.
+  if(data.type==='play'){if(data.id){if(!current)ask('play',{id:data.id});}else ask('ambience');}
+  else if(data.type==='show'){show();ask('hello');ask('requests');}
+  else if(data.type==='hide'){carnet.hidden=true;hide();}
+});
+if(top)ask('hello');
+if(embedded)send({type:'ready'});
+else{show();startButton.hidden=false;}
+</script>
+</body>
+</html>
+
