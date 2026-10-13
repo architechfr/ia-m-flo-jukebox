@@ -7,7 +7,7 @@
 // pastille de l'app. Florian, 18/09 : « on ne doit pas se limiter aux albums,
 // il y a plus ».
 export const TOUCHES=6;
-export const JUKEBOX_RELEASES=[{"kind": "video", "id": "puGX0PvELDM", "label": "Si j'avais tous les pouvoirs (Special Version)"}, {"kind": "video", "id": "GFqhlA3mDck", "label": "Si j'avais tous les pouvoirs (Radio Edit)"}, {"kind": "playlist", "id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14", "label": "Tout ce qu'on ne dit pas"}, {"kind": "video", "id": "7PBsqb7m-XA", "label": "Le roi qui portait mon nom"}, {"kind": "video", "id": "9mmls6xB95Y", "label": "J’ai lu Baudelaire"}, {"kind": "video", "id": "bcEJRWTBupE", "label": "Emmène-moi"}];
+export const JUKEBOX_RELEASES=[{"kind":"video","id":"puGX0PvELDM","label":"Si j'avais tous les pouvoirs (Special Version)"},{"kind":"video","id":"GFqhlA3mDck","label":"Si j'avais tous les pouvoirs (Radio Edit)"},{"kind":"playlist","id":"OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14","label":"Tout ce qu'on ne dit pas"},{"kind":"video","id":"7PBsqb7m-XA","label":"Le roi qui portait mon nom"},{"kind":"video","id":"9mmls6xB95Y","label":"J’ai lu Baudelaire"},{"kind":"video","id":"bcEJRWTBupE","label":"Emmène-moi"},{"kind":"video","id":"kDalpLnaDxU","label":"Bad boys Poolside"},{"kind":"video","id":"MD6Klz3VgiU","label":"Je deviens ton abri"},{"kind":"video","id":"uT8prBneYbo","label":"Jusqu'à nos Noms"}];
 export function randomRelease(except){
   const pool=JUKEBOX_RELEASES.filter(r=>r.id!==except);
   return pool[Math.floor(Math.random()*pool.length)];
