@@ -1,0 +1,16 @@
+{
+  "name": "IA-M.Flo · Le Jukebox",
+  "short_name": "IA-M.Flo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#101516",
+  "theme_color": "#101516",
+  "icons": [
+    {
+      "src": "assets/ia-m-flo-logo-square.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
