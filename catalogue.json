@@ -1,17 +1,5 @@
 [
   {
-    "id": "OLAK5uy_meiJZts1ELyXacBzwwI--Vas-Ga8KIIgU",
-    "title": "Si j'avais tous les pouvoirs (Special Version)",
-    "kind": "Single",
-    "cover": "https://i9.ytimg.com/s_p/OLAK5uy_meiJZts1ELyXacBzwwI--Vas-Ga8KIIgU/maxresdefault.jpg?sqp=CMTXudYGir7X7AMICP_82NQGEAE=&rs=AOn4CLAB7XDoPA7qQu57MKYzEuOPmaKCZw&v=1788231295",
-    "tracks": [
-      {
-        "id": "puGX0PvELDM",
-        "title": "Si j'avais tous les pouvoirs (Special Version)"
-      }
-    ]
-  },
-  {
     "id": "radio-edit",
     "title": "Si j'avais tous les pouvoirs (Radio Edit)",
     "kind": "Single",
@@ -20,6 +8,30 @@
       {
         "id": "GFqhlA3mDck",
         "title": "Si j'avais tous les pouvoirs (Radio Edit)"
+      }
+    ]
+  },
+  {
+    "id": "15Piz_Avcls",
+    "title": "Le roi qui portait mon nom",
+    "kind": "Single",
+    "cover": "https://i.ytimg.com/vi/15Piz_Avcls/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "15Piz_Avcls",
+        "title": "Le roi qui portait mon nom"
+      }
+    ]
+  },
+  {
+    "id": "OLAK5uy_meiJZts1ELyXacBzwwI--Vas-Ga8KIIgU",
+    "title": "Si j'avais tous les pouvoirs (Special Version)",
+    "kind": "Single",
+    "cover": "https://i9.ytimg.com/s_p/OLAK5uy_meiJZts1ELyXacBzwwI--Vas-Ga8KIIgU/maxresdefault.jpg?sqp=CMTXudYGir7X7AMICP_82NQGEAE=&rs=AOn4CLAB7XDoPA7qQu57MKYzEuOPmaKCZw&v=1788231295",
+    "tracks": [
+      {
+        "id": "puGX0PvELDM",
+        "title": "Si j'avais tous les pouvoirs (Special Version)"
       }
     ]
   },
@@ -100,6 +112,66 @@
       {
         "id": "vv_wu_y6URA",
         "title": "Imagine"
+      }
+    ]
+  },
+  {
+    "id": "emEC-87rYR4",
+    "title": "Dernière Mémoire (chanson sur la maladie d'Alzheimer)",
+    "kind": "Single",
+    "cover": "https://i.ytimg.com/vi/emEC-87rYR4/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "emEC-87rYR4",
+        "title": "Dernière Mémoire (chanson sur la maladie d'Alzheimer)"
+      }
+    ]
+  },
+  {
+    "id": "QWrfK6BtO6s",
+    "title": "Storm Of Change",
+    "kind": "Single",
+    "cover": "https://i.ytimg.com/vi/QWrfK6BtO6s/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "QWrfK6BtO6s",
+        "title": "Storm Of Change"
+      }
+    ]
+  },
+  {
+    "id": "sFJiQ7f58Eg",
+    "title": "We the People",
+    "kind": "Single",
+    "cover": "https://i.ytimg.com/vi/sFJiQ7f58Eg/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "sFJiQ7f58Eg",
+        "title": "We the People"
+      }
+    ]
+  },
+  {
+    "id": "jxXgvyLLm0k",
+    "title": "Le Monde se rêve",
+    "kind": "Single",
+    "cover": "https://i.ytimg.com/vi/jxXgvyLLm0k/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "jxXgvyLLm0k",
+        "title": "Le Monde se rêve"
+      }
+    ]
+  },
+  {
+    "id": "c1htdWkvK6c",
+    "title": "Le chemin de la maison",
+    "kind": "Single",
+    "cover": "https://i.ytimg.com/vi/c1htdWkvK6c/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "c1htdWkvK6c",
+        "title": "Le chemin de la maison"
       }
     ]
   }

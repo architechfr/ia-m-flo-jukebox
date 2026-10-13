@@ -20,3 +20,9 @@ function closeFallback(){machine.classList.remove('is-expanded');document.body.c
 fullscreenButton.onclick=async()=>{if(document.fullscreenElement===machine){await document.exitFullscreen();return}if(machine.classList.contains('is-expanded')){closeFallback();return}if(machine.requestFullscreen){try{await machine.requestFullscreen();fullscreenChanged();fullscreenButton.focus();return}catch{}}expandFallback()};
 document.addEventListener('fullscreenchange',fullscreenChanged);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&machine.classList.contains('is-expanded'))closeFallback()});
+
+const qrDialog=$('qr-dialog'),qrToggle=$('qr-toggle'),qrCopy=$('qr-copy');
+qrToggle.onclick=()=>qrDialog.showModal();
+qrDialog.querySelector('.qr-close').onclick=()=>qrDialog.close();
+qrDialog.addEventListener('click',event=>{if(event.target===qrDialog)qrDialog.close()});
+qrCopy.onclick=async()=>{try{await navigator.clipboard.writeText('https://ia-m-flo-jukebox.vercel.app/');qrCopy.textContent='Lien copié !';setTimeout(()=>qrCopy.textContent='Copier le lien',1800)}catch{qrCopy.textContent='Sélectionne le lien ci-dessus'}};
