@@ -1,18 +1,26 @@
-// Synchronise le jukebox avec les dernières vidéos YouTube d'IA-M.Flo.
-// Lancé par GitHub Actions (.github/workflows/sync-youtube.yml) : lit le flux
-// RSS et la page « Sorties » (albums/singles DistroKid) de la chaîne, sans clé
-// API, et ajoute les nouveautés en tête
-// de catalogue.json et dans releases.js (après les 6 touches du meuble, qui ne
-// bougent pas). Si rien de nouveau, aucun fichier n'est modifié.
+// Synchronise le jukebox avec les sorties YouTube d'IA-M.Flo.
+// Lancé par GitHub Actions (.github/workflows/sync-youtube.yml), sans clé API :
+//  1. lit TOUTE la page « Sorties » de la chaîne (albums et singles DistroKid,
+//     playlists OLAK5uy_…), pages suivantes comprises ;
+//  2. garde les sorties absentes du site et publiées depuis AJOUTER_DEPUIS ;
+//  3. les ajoute en tête de catalogue.json et dans releases.js (après les 6
+//     touches du meuble, qui ne bougent pas).
+// Les sorties plus anciennes sont notées dans scripts/sorties-ignorees.json
+// pour ne pas être revérifiées à chaque passage. Si rien de nouveau, aucun
+// fichier n'est modifié.
 //
 // Lancer à la main : node scripts/sync-youtube.mjs
-// Tester sans réseau : RSS_FILE=chemin/flux.xml node scripts/sync-youtube.mjs
+// Tester sans réseau : RELEASES_FILE=sorties.json RSS_FILE=flux.xml node scripts/sync-youtube.mjs
 
 import { readFile, writeFile } from 'node:fs/promises';
 
-// Chaînes à surveiller. La première est celle du site (lien YouTube du menu).
-// Ajouter ici l'identifiant UC… d'une autre chaîne (ex. « IA-M.Flo - Topic »).
+// Chaînes à surveiller (identifiants UC…).
 const CHANNELS = ['UCGI05gYi2FkYG5v6sZo7klw'];
+
+// Les sorties publiées avant cette date ne sont pas ajoutées automatiquement.
+// Pour importer tout l'ancien catalogue : mettre '2000-01-01' et vider
+// scripts/sorties-ignorees.json.
+const AJOUTER_DEPUIS = '2026-10-28';
 
 // Titres à ne jamais ajouter (teasers, extraits…) : mots-clés en minuscules.
 const IGNORER = ['#shorts', 'teaser', 'trailer', 'extrait', 'snippet'];
@@ -20,8 +28,9 @@ const IGNORER = ['#shorts', 'teaser', 'trailer', 'extrait', 'snippet'];
 const root = new URL('..', import.meta.url);
 const CATALOGUE = new URL('catalogue.json', root);
 const RELEASES = new URL('releases.js', root);
+const IGNOREES = new URL('scripts/sorties-ignorees.json', root);
 
-const decode = s => s
+const decode = s => String(s)
   .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
   .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n));
@@ -30,41 +39,14 @@ const decode = s => s
 const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '')
   .replace(/[’'`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim();
 
-function parseFeed(xml) {
-  const out = [];
-  for (const [, entry] of xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
-    const id = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
-    const title = entry.match(/<title>([^<]*)<\/title>/)?.[1];
-    const link = entry.match(/<link[^>]*href="([^"]+)"/)?.[1] || '';
-    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1] || '';
-    if (!id || !title) continue;
-    out.push({ id, title: decode(title).trim(), published, short: link.includes('/shorts/') });
-  }
-  return out;
-}
-
-async function loadFeeds() {
-  if (process.env.RSS_FILE) return parseFeed(await readFile(process.env.RSS_FILE, 'utf8'));
-  const all = [];
-  for (const ch of CHANNELS) {
-    const res = await fetch('https://www.youtube.com/feeds/videos.xml?channel_id=' + ch);
-    if (!res.ok) throw new Error(`Flux ${ch} : HTTP ${res.status}`);
-    all.push(...parseFeed(await res.text()));
-  }
-  return all;
-}
-
-// ---- Albums et singles (onglet « Sorties » de la chaîne) ----
-// DistroKid publie les chansons en playlists OLAK5uy_… : elles n'apparaissent
-// pas dans le flux RSS des vidéos, il faut lire la page des sorties.
 const HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36',
   'Accept-Language': 'fr-FR,fr;q=0.9',
   'Cookie': 'SOCS=CAI', // évite la page de consentement cookies
 };
 
-async function getHtml(url) {
-  const res = await fetch(url, { headers: HEADERS });
+async function getText(url, init = {}) {
+  const res = await fetch(url, { ...init, headers: { ...HEADERS, ...(init.headers || {}) } });
   if (!res.ok) throw new Error(`${url} : HTTP ${res.status}`);
   return res.text();
 }
@@ -74,9 +56,35 @@ function initialData(html) {
   return m ? JSON.parse(m[1]) : null;
 }
 
-// Titres d'une playlist, dans l'ordre de l'album.
+// ---- Sorties (albums et singles) ----
+
+// Tous les identifiants OLAK5uy_ de la page Sorties, dans l'ordre affiché,
+// en suivant les « pages suivantes » (continuations).
+async function listReleaseIds(channel) {
+  const html = await getText(`https://www.youtube.com/channel/${channel}/releases`);
+  const version = html.match(/"INNERTUBE_CLIENT_VERSION":"([^"]+)"/)?.[1] || '2.20261101.00.00';
+  const ids = [];
+  const collect = s => { for (const m of s.matchAll(/OLAK5uy_[\w-]{20,}/g)) if (!ids.includes(m[0])) ids.push(m[0]); };
+  const tokensOf = s => [...s.matchAll(/"continuationCommand":\{"token":"([^"]+)"/g)].map(m => m[1]);
+  collect(html);
+  const queue = tokensOf(html), done = new Set();
+  for (let n = 0; queue.length && n < 60; n++) {
+    const token = queue.shift();
+    if (done.has(token)) continue;
+    done.add(token);
+    const body = JSON.stringify({ context: { client: { clientName: 'WEB', clientVersion: version, hl: 'fr' } }, continuation: token });
+    const json = await getText('https://www.youtube.com/youtubei/v1/browse?prettyPrint=false',
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+    collect(json);
+    queue.push(...tokensOf(json));
+  }
+  return ids;
+}
+
+// Titre, morceaux (dans l'ordre) et date de sortie d'une playlist OLAK5uy_.
 async function loadPlaylist(id) {
-  const data = initialData(await getHtml('https://www.youtube.com/playlist?list=' + id));
+  const html = await getText('https://www.youtube.com/playlist?list=' + id);
+  const data = initialData(html);
   if (!data) throw new Error('Playlist illisible : ' + id);
   const items = new Map();
   (function walk(o) {
@@ -95,26 +103,59 @@ async function loadPlaylist(id) {
   })(data);
   const tracks = [...items].filter(([, [, t]]) => t)
     .sort((a, b) => a[1][0] - b[1][0]).map(([v, [, t]]) => [v, decode(t).trim()]);
-  const title = data.metadata?.playlistMetadataRenderer?.title || tracks[0]?.[1];
-  return { id, title, tracks };
+  const title = decode(data.metadata?.playlistMetadataRenderer?.title
+    || html.match(/<title>([^<]*?)(?: - YouTube)?<\/title>/)?.[1] || tracks[0]?.[1] || '');
+  // Date : « Released on: AAAA-MM-JJ » dans la description DistroKid du 1er titre.
+  let date = '';
+  if (tracks[0]) {
+    const watch = await getText('https://www.youtube.com/watch?v=' + tracks[0][0]);
+    date = watch.match(/Released on: (\d{4}-\d\d-\d\d)/)?.[1]
+      || watch.match(/"publishDate":"(\d{4}-\d\d-\d\d)/)?.[1] || '';
+  }
+  return { id, title, date, tracks };
 }
 
-// Sorties de la chaîne, de la plus récente à la plus ancienne.
-async function loadReleases(known) {
+async function loadReleases(known, ignored) {
   if (process.env.RELEASES_FILE) return JSON.parse(await readFile(process.env.RELEASES_FILE, 'utf8'));
   const out = [];
   for (const ch of CHANNELS) {
-    const html = await getHtml(`https://www.youtube.com/channel/${ch}/releases`);
-    const ids = [...new Set([...html.matchAll(/OLAK5uy_[\w-]{20,}/g)].map(m => m[0]))];
-    console.log(`${ch} : ${ids.length} sortie(s) sur la chaîne`);
-    for (const id of ids) {
-      if (known.has(id)) continue;
-      try { out.push(await loadPlaylist(id)); }
-      catch (e) { console.warn(String(e)); }
+    const ids = await listReleaseIds(ch);
+    const todo = ids.filter(id => !known.has(id) && !ignored.has(id));
+    console.log(`${ch} : ${ids.length} sortie(s) sur la chaîne, ${todo.length} à vérifier`);
+    for (let i = 0; i < todo.length; i += 5) {
+      const batch = await Promise.all(todo.slice(i, i + 5).map(id =>
+        loadPlaylist(id).catch(e => { console.warn(String(e)); return null; })));
+      out.push(...batch.filter(Boolean));
     }
   }
   return out;
 }
+
+// ---- Vidéos isolées (flux RSS de la chaîne) ----
+
+function parseFeed(xml) {
+  const out = [];
+  for (const [, entry] of xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)) {
+    const id = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
+    const title = entry.match(/<title>([^<]*)<\/title>/)?.[1];
+    const link = entry.match(/<link[^>]*href="([^"]+)"/)?.[1] || '';
+    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1] || '';
+    if (!id || !title) continue;
+    out.push({ id, title: decode(title).trim(), published, short: link.includes('/shorts/') });
+  }
+  return out;
+}
+
+async function loadFeeds() {
+  if (process.env.RSS_FILE) return parseFeed(await readFile(process.env.RSS_FILE, 'utf8'));
+  const all = [];
+  for (const ch of CHANNELS) {
+    all.push(...parseFeed(await getText('https://www.youtube.com/feeds/videos.xml?channel_id=' + ch)));
+  }
+  return all;
+}
+
+// ---- Mise à jour du catalogue ----
 
 const catalogue = JSON.parse(await readFile(CATALOGUE, 'utf8'));
 const releasesSrc = await readFile(RELEASES, 'utf8');
@@ -122,19 +163,28 @@ const releasesMatch = releasesSrc.match(/export const JUKEBOX_RELEASES=(\[.*\]);
 if (!releasesMatch) throw new Error('JUKEBOX_RELEASES introuvable dans releases.js');
 const jukebox = JSON.parse(releasesMatch[1]);
 const TOUCHES = +(releasesSrc.match(/export const TOUCHES=(\d+)/)?.[1] ?? 6);
+const ignoredList = JSON.parse(await readFile(IGNOREES, 'utf8').catch(() => '[]'));
+const ignored = new Set(ignoredList);
 
 const knownIds = new Set(catalogue.flatMap(a => [a.id, ...a.tracks.map(t => t.id)]));
 const knownTitles = new Set(catalogue.flatMap(a => [a.title, ...a.tracks.map(t => t.title)]).map(norm));
 
 const added = [];
+let ignoredChanged = false;
 
-// 1) Albums et singles officiels. Ajoutés du plus ancien au plus récent pour
-// que le plus récent finisse tout en haut du catalogue.
-const releases = (await loadReleases(knownIds)).filter(r => !knownIds.has(r.id) && r.tracks.length);
-for (const r of releases.reverse()) {
+// 1) Albums et singles. Du plus ancien au plus récent : le plus récent finit en haut.
+const releases = (await loadReleases(knownIds, ignored))
+  .filter(r => !knownIds.has(r.id) && r.tracks.length);
+for (const r of releases) {
+  if (r.date && r.date < AJOUTER_DEPUIS && !ignored.has(r.id)) { ignored.add(r.id); ignoredChanged = true; }
+}
+const fresh = releases.filter(r => !ignored.has(r.id))
+  .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
+for (const r of fresh) {
   const single = r.tracks.length === 1;
   catalogue.unshift({
     id: r.id, title: r.title, kind: single ? 'Single' : 'Album',
+    ...(r.date ? { date: r.date } : {}),
     cover: `https://i.ytimg.com/vi/${r.tracks[0][0]}/hqdefault.jpg`,
     tracks: r.tracks.map(([id, title]) => ({ id, title })),
   });
@@ -143,7 +193,7 @@ for (const r of releases.reverse()) {
     : { kind: 'playlist', id: r.id, label: r.title });
   for (const [id, title] of r.tracks) { knownIds.add(id); knownTitles.add(norm(title)); }
   knownIds.add(r.id);
-  added.push(`${single ? 'Single' : 'Album'} « ${r.title} » (${r.tracks.length} titre${single ? '' : 's'})`);
+  added.push(`${r.date || '?'}  ${single ? 'Single' : 'Album'} « ${r.title} »${single ? '' : ` (${r.tracks.length} titres)`}`);
 }
 
 // 2) Vidéos isolées publiées sur la chaîne (flux RSS).
@@ -151,13 +201,11 @@ const videos = (await loadFeeds().catch(e => { console.warn(String(e)); return [
   .filter(v => !v.short)
   .filter(v => !IGNORER.some(k => v.title.toLowerCase().includes(k)))
   .filter(v => !knownIds.has(v.id) && !knownTitles.has(norm(v.title)))
-  .sort((a, b) => a.published.localeCompare(b.published)); // plus ancien d'abord
-
+  .sort((a, b) => a.published.localeCompare(b.published));
 const seen = new Set();
 for (const v of videos) {
   if (seen.has(norm(v.title))) continue;
   seen.add(norm(v.title));
-  // unshift dans l'ordre chronologique : le plus récent finit tout en haut.
   catalogue.unshift({
     id: v.id, title: v.title, kind: 'Single',
     cover: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`,
@@ -167,6 +215,10 @@ for (const v of videos) {
   added.push(`Vidéo « ${v.title} »`);
 }
 
+if (ignoredChanged) {
+  await writeFile(IGNOREES, JSON.stringify([...ignored].sort(), null, 0).replace(/","/g, '",\n"') + '\n');
+  console.log(`${ignored.size} sortie(s) antérieure(s) au ${AJOUTER_DEPUIS} ignorée(s).`);
+}
 if (!added.length) {
   console.log('Rien de nouveau.');
 } else {
