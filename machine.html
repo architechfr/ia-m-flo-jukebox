@@ -133,8 +133,9 @@ cssRenderer.setSize(innerWidth,innerHeight);cssRenderer.render(scene,camera);
 /* ================= the machine ================= */
 const LABELS=[...JUKEBOX_RELEASES.slice(0,TOUCHES).map(r=>r.label.toUpperCase()),'AU HASARD','SUIVANT','PAUSE','LECTURE'];
 let jukebox=null,keyTargets=[];
-const logo=await new THREE.TextureLoader().loadAsync('./assets/ia-m-flo-logo-square.svg').catch(()=>null);
-jukebox=buildJukebox({logo,labels:LABELS});
+const charge=f=>new THREE.TextureLoader().loadAsync(f).catch(()=>null);
+const [logo,haut,gauche,droite,sol0]=await Promise.all(['./assets/ia-m-flo-logo-square.svg','./assets/medaillon-haut.webp','./assets/medaillon-gauche.webp','./assets/medaillon-droite.webp','./assets/medaillon-sol.webp'].map(charge));
+jukebox=buildJukebox({logo,emblems:{haut,gauche,droite},labels:LABELS});
 // L'ecran peint devient un trou dans le rendu : il ecrit la profondeur (rien
 // derriere ne se dessine la) mais pas de couleur, et la video apparait au travers.
 jukebox.screen.material=new THREE.MeshBasicMaterial({colorWrite:false});
@@ -144,9 +145,10 @@ scene.add(jukebox.group);
 // plutot que tout noir ». Le medaillon dore, a plat sous le meuble : la texture
 // est recadree (repeat/offset) pour que le bord du disque tombe sur l'anneau
 // d'or, sans le carre noir de l'image autour.
-if(logo){
-  const sol=logo.clone();sol.repeat.set(0.9,0.9);sol.offset.set(0.05,0.05);sol.needsUpdate=true;
-  const medaillon=new THREE.Mesh(new THREE.CircleGeometry(1.12,96),new THREE.MeshStandardMaterial({map:sol,emissive:0xffffff,emissiveMap:sol,emissiveIntensity:0.32,roughness:0.38,metalness:0.55}));
+if(sol0||logo){
+  // 20/11 : le medaillon IA-M.Flo remplit deja tout le carre de l'image.
+  const sol=sol0||logo.clone();if(sol0){sol.colorSpace=THREE.SRGBColorSpace;}else{sol.repeat.set(0.9,0.9);sol.offset.set(0.05,0.05);}sol.needsUpdate=true;
+  const medaillon=new THREE.Mesh(new THREE.CircleGeometry(1.12,96),new THREE.MeshStandardMaterial({map:sol,color:sol0?0x6a6a6a:0xffffff,emissive:0xffffff,emissiveMap:sol,emissiveIntensity:sol0?0.06:0.32,roughness:0.5,metalness:0.55}));
   medaillon.name='solLogo';medaillon.rotation.x=-Math.PI/2;medaillon.position.set(0,0.002,0.04);scene.add(medaillon);
 }
 keyTargets=jukebox.keys.flatMap(k=>[k.key,k.button]);

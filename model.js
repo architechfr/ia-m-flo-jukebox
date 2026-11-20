@@ -118,7 +118,9 @@ export const DEFAULT_LABELS=['ROCK','POP','SOUL','FUNK','DISCO','JAZZ','HIP HOP'
 // prepare : appelee sur chaque maille (la salle y pose ses ombres).
 // lights : les quatre lampes de la maquette (halo des neons). La salle les
 // coupe : avec son propre eclairage et son bloom, elles brûlaient le meuble.
-export function buildJukebox({logo,labels=DEFAULT_LABELS,prepare=()=>{},lights=true}={}){
+// emblems : {haut,gauche,droite} -- les trois medaillons ronds (images carrees,
+// disque plein cadre). A defaut, le logo sert partout.
+export function buildJukebox({logo,emblems={},labels=DEFAULT_LABELS,prepare=()=>{},lights=true}={}){
   const std=(name,p)=>Object.assign(new THREE.MeshStandardMaterial(p),{name:'juke_'+name});
   const woodTex=woodTexture();
   const clothTex=tex(128,128,(g,w,h)=>{
@@ -158,6 +160,10 @@ export function buildJukebox({logo,labels=DEFAULT_LABELS,prepare=()=>{},lights=t
     ['GOOD','MUSIC','GOOD','FRIENDS','BETTER','DAYS'].forEach((t,i)=>g.fillText(t,256,90+i*100));
   });
   if(logo){logo.colorSpace=THREE.SRGBColorSpace;logo.anisotropy=8;}
+  for(const t of Object.values(emblems))if(t){t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;}
+  // Florian, 20/11 : medaillons IA-M.Flo dores. Images deja lumineuses : une
+  // legere lueur propre suffit pour qu'ils ne tombent pas dans le noir.
+  const emblemMat=(t,n)=>t?std('emblem'+n,{map:t,emissive:0xffffff,emissiveMap:t,emissiveIntensity:0.3,roughness:0.35,metalness:0.15}):null;
 
   const M={
     wood:    std('walnut',      {map:woodTex,roughness:0.32,metalness:0.05}),
@@ -245,7 +251,7 @@ export function buildJukebox({logo,labels=DEFAULT_LABELS,prepare=()=>{},lights=t
 
   /* ---- crown emblem ---- */
   add(cyl(0.125,0.05,56),M.black,'crownEmblemBack',[0,TOP-0.05,FZ+0.04],[PI/2,0,0]);
-  add(new THREE.CircleGeometry(0.120,64),M.emblem,'crownEmblem',[0,TOP-0.05,FZ+0.0665]);
+  add(new THREE.CircleGeometry(0.120,64),emblemMat(emblems.haut,'Haut')||M.emblem,'crownEmblem',[0,TOP-0.05,FZ+0.0665]);
   add(new THREE.TorusGeometry(0.127,0.014,16,72),M.brass,'crownRing',[0,TOP-0.05,FZ+0.062]);
   for(const s of [-1,1]){
     add(cyl(0.05,0.10,32),M.chrome,`crownBracket${LR(s)}`,[s*0.15,TOP-0.115,OUT_Z],[0,0,s*0.55]);
@@ -336,7 +342,7 @@ export function buildJukebox({logo,labels=DEFAULT_LABELS,prepare=()=>{},lights=t
   for(const s of [-1,1]){
     const x=s*(R+0.014);
     add(cyl(0.125,0.012,56),M.black,`sideEmblemBack${LR(s)}`,[x,0.98,0.0],[0,0,PI/2]);
-    add(new THREE.CircleGeometry(0.12,56),M.emblem,`sideEmblem${LR(s)}`,[x+s*0.007,0.98,0.0],[0,s*PI/2,0]);
+    add(new THREE.CircleGeometry(0.12,56),emblemMat(s<0?emblems.gauche:emblems.droite,LR(s))||M.emblem,`sideEmblem${LR(s)}`,[x+s*0.007,0.98,0.0],[0,s*PI/2,0]);
     add(new THREE.TorusGeometry(0.124,0.009,12,64),M.brass,`sideEmblemRing${LR(s)}`,[x+s*0.004,0.98,0.0],[0,PI/2,0]);
     add(new THREE.PlaneGeometry(0.26,0.325),M.sideTxt,`sideText${LR(s)}`,[s*(R+0.016),0.62,0.0],[0,s*PI/2,0]);
     add(box(0.014,0.014,D-0.02),M.chrome,`sideRail${LR(s)}`,[s*(R+0.016),0.32,0]);
