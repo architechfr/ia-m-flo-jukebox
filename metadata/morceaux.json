@@ -1,0 +1,801 @@
+{
+  "_lisezmoi": "Voir metadata/README.md. Un objet = un enregistrement (un ISRC). null = pas encore renseigné.",
+  "defauts": {
+    "paroliers": null,
+    "compositeurs": null,
+    "langue": null,
+    "explicite": null,
+    "instrumental": null
+  },
+  "morceaux": [
+    {
+      "titre": "Le chemin de la maison",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Le chemin de la maison",
+          "sortie_id": "c1htdWkvK6c",
+          "youtube": "c1htdWkvK6c"
+        }
+      ]
+    },
+    {
+      "titre": "Le Monde se rêve",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Le Monde se rêve",
+          "sortie_id": "jxXgvyLLm0k",
+          "youtube": "jxXgvyLLm0k"
+        }
+      ]
+    },
+    {
+      "titre": "We the People",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "We the People",
+          "sortie_id": "sFJiQ7f58Eg",
+          "youtube": "sFJiQ7f58Eg"
+        }
+      ]
+    },
+    {
+      "titre": "Storm Of Change",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Storm Of Change",
+          "sortie_id": "QWrfK6BtO6s",
+          "youtube": "QWrfK6BtO6s"
+        }
+      ]
+    },
+    {
+      "titre": "Dernière Mémoire (chanson sur la maladie d'Alzheimer)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Dernière Mémoire (chanson sur la maladie d'Alzheimer)",
+          "sortie_id": "emEC-87rYR4",
+          "youtube": "emEC-87rYR4"
+        },
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "jqSdR3VJpnk"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "Le roi qui portait mon nom",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "7PBsqb7m-XA"
+        },
+        {
+          "sortie": "Le roi qui portait mon nom",
+          "sortie_id": "15Piz_Avcls",
+          "youtube": "15Piz_Avcls"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "J’ai lu Baudelaire",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "9mmls6xB95Y"
+        }
+      ]
+    },
+    {
+      "titre": "Emmène-moi",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "bcEJRWTBupE"
+        }
+      ]
+    },
+    {
+      "titre": "Même quand tu m’énerves",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "aseTgConFkA"
+        }
+      ]
+    },
+    {
+      "titre": "Je vois tout",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "G0ktiZqUANE"
+        }
+      ]
+    },
+    {
+      "titre": "La lumière en retard",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "YLP11y08XSk"
+        }
+      ]
+    },
+    {
+      "titre": "Quand tu as respiré",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "K0tkwLomRcU"
+        }
+      ]
+    },
+    {
+      "titre": "Imagine",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Tout ce qu'on ne dit pas",
+          "sortie_id": "OLAK5uy_lcmxeH3nBaSej0o3qbnULU7sfI97uqi14",
+          "youtube": "vv_wu_y6URA"
+        }
+      ]
+    },
+    {
+      "titre": "Bad boys Poolside",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Bad boys Poolside",
+          "sortie_id": "kDalpLnaDxU",
+          "youtube": "kDalpLnaDxU"
+        },
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "kDalpLnaDxU"
+        }
+      ]
+    },
+    {
+      "titre": "Je deviens ton abri",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Je deviens ton abri",
+          "sortie_id": "MD6Klz3VgiU",
+          "youtube": "MD6Klz3VgiU"
+        },
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "MD6Klz3VgiU"
+        }
+      ]
+    },
+    {
+      "titre": "Jusqu'à nos Noms",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Jusqu'à nos Noms",
+          "sortie_id": "uT8prBneYbo",
+          "youtube": "uT8prBneYbo"
+        },
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "hGfhWYZw67U"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "Si j'avais tous les pouvoirs (Special Version)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Si j'avais tous les pouvoirs (Special Version)",
+          "sortie_id": "OLAK5uy_meiJZts1ELyXacBzwwI--Vas-Ga8KIIgU",
+          "youtube": "puGX0PvELDM"
+        }
+      ]
+    },
+    {
+      "titre": "Si j'avais tous les pouvoirs (Radio Edit)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Si j'avais tous les pouvoirs (Radio Edit)",
+          "sortie_id": "radio-edit",
+          "youtube": "GFqhlA3mDck"
+        }
+      ]
+    },
+    {
+      "titre": "Samba American Show",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "x1SWy4cvWmo"
+        },
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "Tl8WV2BAB4I"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "Dernier Carré",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "g4aqOr7GQKY"
+        },
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "EdH6K53sKtg"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "Force à vous",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "RtVZ0ojObxQ"
+        }
+      ]
+    },
+    {
+      "titre": "On veut notre revanche (France vs Espagne)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "6_Q9m-jOnPk"
+        }
+      ]
+    },
+    {
+      "titre": "On monte en puissance (Allez les bleus)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "o4bOQT5tZyM"
+        }
+      ]
+    },
+    {
+      "titre": "Feu contre feu",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "dsgBastCtuk"
+        }
+      ]
+    },
+    {
+      "titre": "Le Ballon Rond (musique coupe du monde 2026)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "En route vers la finale",
+          "sortie_id": "OLAK5uy_l-9ZGqzXbPmTNPsxfeEdO0Oc-DDbl8g3s",
+          "youtube": "ziG3bRybnZ4"
+        }
+      ]
+    },
+    {
+      "titre": "Comme si c'était le dernier jour",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "Ajph5DtXUqA"
+        },
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "kNxaGxofGos"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "Golden evening",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "9ZS9g1pA8dU"
+        }
+      ]
+    },
+    {
+      "titre": "Summer road drive south",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "sUPuDoa6xo0"
+        }
+      ]
+    },
+    {
+      "titre": "Summer feels like home",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "iPNZEQvUmQY"
+        },
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "lBiS5zRHc9o"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "Golden Hour Stay",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "3xT2skenFjI"
+        }
+      ]
+    },
+    {
+      "titre": "By the pool",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "9Sw3Qb4-FLs"
+        }
+      ]
+    },
+    {
+      "titre": "CAMPAGNAN BLUES",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "u0UtESyxhc4"
+        }
+      ]
+    },
+    {
+      "titre": "Une nuit à Bélarga (DJ_IAM_Flo Remix)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "JLizVy7oOvg"
+        }
+      ]
+    },
+    {
+      "titre": "Redemption Song (France vs Espagne)",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "L-s6rKQ7P8Q"
+        }
+      ]
+    },
+    {
+      "titre": "Plonge avec moi",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Summer 2026 (chansons été 2026)",
+          "sortie_id": "OLAK5uy_nwYZUjR7PD2sGhRb0nnJ3G2r6buB5czBM",
+          "youtube": "6cUGy31Cljc"
+        },
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "QngK8QOS-xc"
+        }
+      ],
+      "a_verifier": "Plusieurs vidéos YouTube : confirmer dans DistroKid que c'est le même enregistrement (même ISRC) et pas une autre version."
+    },
+    {
+      "titre": "J'arrive",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "t4YUeK6lq6U"
+        }
+      ]
+    },
+    {
+      "titre": "Le Goût de Toi",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "r0hQu6dGbis"
+        }
+      ]
+    },
+    {
+      "titre": "Gravé dans le Vent",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "KdwLUK0HoqI"
+        }
+      ]
+    },
+    {
+      "titre": "Petite Case, Grandes Émotions",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Là où le cœur revient",
+          "sortie_id": "OLAK5uy_lMP5PqklrYY4i-UvgqJAx2iurf_jlEMBQ",
+          "youtube": "OZp7HW8nJCg"
+        }
+      ]
+    },
+    {
+      "titre": "Le Cubi Qui Dit Toujours Oui",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "5k997K-dJc8"
+        }
+      ]
+    },
+    {
+      "titre": "Poolside Trouble",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "4rQo1VS93yg"
+        }
+      ]
+    },
+    {
+      "titre": "La Buvette",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "NO Rules POOL PARTY (musique fête autour de la piscine)",
+          "sortie_id": "OLAK5uy_kQSvui9K2DHiO915DwJKKbOj2zUI8bH_M",
+          "youtube": "Kh5RDdA-Kq0"
+        }
+      ]
+    },
+    {
+      "titre": "Prends-moi dans tes bras, Maman | Même adulte, j'ai besoin de toi",
+      "isrc": null,
+      "paroliers": null,
+      "compositeurs": null,
+      "langue": null,
+      "explicite": null,
+      "instrumental": null,
+      "audio": null,
+      "apparitions": [
+        {
+          "sortie": "Prends-moi dans tes bras, Maman | Même adulte, j'ai besoin de toi",
+          "sortie_id": "OLAK5uy_nXvIj4-nNml2kTYm1F0Jz1f_D124DH73s",
+          "youtube": "LfJ-1RPZpE4"
+        }
+      ]
+    }
+  ]
+}
