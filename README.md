@@ -1,6 +1,6 @@
 # IA-M.Flo · Le jukebox
 
-Jukebox 3D original avec 11 titres, lecteur YouTube, recherche, partage et lien Spotify.
+Jukebox 3D original avec 11 titres, lecteur YouTube, recherche, partage et liens vers toutes les plateformes (Spotify, Apple Music, Deezer, Amazon Music, TIDAL, Qobuz, YouTube, YouTube Music).
 
 Déploiement Vercel : preset Other, dossier racine, aucun build. Configuration fournie dans vercel.json.
 

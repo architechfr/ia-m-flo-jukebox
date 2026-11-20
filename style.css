@@ -15,7 +15,7 @@ nav a{white-space:nowrap}
 @media(max-width:800px){
 header{flex-wrap:wrap;gap:14px;padding:16px 5%}
 .logo{width:min(220px,62vw)}
-nav{width:100%;justify-content:space-between;gap:8px;font-size:14px}
+nav{width:100%;justify-content:space-between;flex-wrap:wrap;gap:10px 8px;font-size:14px}
 nav button,nav #qr-toggle{padding:8px 13px;font-size:13px;white-space:nowrap}
 .release{grid-template-columns:92px 1fr;gap:16px;padding:24px 0}
 .cover{border-radius:10px}
@@ -26,3 +26,7 @@ nav button,nav #qr-toggle{padding:8px 13px;font-size:13px;white-space:nowrap}
 .track{padding:12px 0}
 }
 @media(max-width:380px){nav{font-size:13px}nav button,nav #qr-toggle{padding:7px 10px;font-size:12px}}
+
+/* Plateformes de streaming (21/11) */
+.platforms{margin-top:22px}.platforms .eyebrow{margin:0 0 10px}.platform-links{display:flex;flex-wrap:wrap;gap:8px}.platform-links a{border:1px solid #786649;color:#e7d4b3;border-radius:20px;padding:7px 14px;font-size:13px;white-space:nowrap}.platform-links a:hover{background:#dec18c;color:#15191b;border-color:#dec18c}
+@media(max-width:800px){.platform-links a{padding:6px 11px;font-size:12px}}
