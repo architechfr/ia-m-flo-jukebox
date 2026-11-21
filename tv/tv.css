@@ -1,0 +1,25 @@
+/* Version TV : écrite pour le moteur web des Samsung 2017 (Tizen 3.0).
+   Pas de grille CSS ni de variables CSS : flexbox seulement. */
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#121619;color:#f2e9d9;font-family:Arial,sans-serif}
+header{height:110px;padding:0 80px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;border-bottom:1px solid #2a2c2b}
+.logo{height:64px}
+.aide{color:#c6a773;font-size:24px;letter-spacing:1px}
+.scene{height:500px;padding:30px 80px 0;display:-webkit-flex;display:flex}
+.ecran{position:relative;width:800px;height:450px;background:#000;border:2px solid #3c3a32;border-radius:18px;overflow:hidden;-webkit-flex:none;flex:none}
+.ecran iframe,#player{width:800px;height:450px;border:0}
+#attente{position:absolute;left:0;right:0;top:190px;text-align:center;font-size:28px;color:#b7b7b0;margin:0}
+.infos{padding:20px 0 0 60px;-webkit-flex:1;flex:1}
+.surtitre{color:#c6a773;font-size:20px;letter-spacing:5px;margin:0}
+#titre{font-family:Georgia,serif;font-weight:normal;font-size:58px;line-height:1.15;margin:20px 0}
+#sortie{font-size:30px;color:#b7b7b0;margin:0}
+#etat{font-size:26px;color:#edcda0;margin-top:30px}
+#liste{height:470px;overflow:hidden;padding:0 80px}
+#cartes{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin:0 -12px;-webkit-transition:-webkit-transform .2s;transition:transform .2s}
+.carte{width:328px;height:232px;margin:12px;border-radius:14px;overflow:hidden;background:#1c2124;border:4px solid transparent}
+.carte img{display:block;width:320px;height:180px;object-fit:cover;background:#000}
+.carte p{margin:0;padding:8px 12px;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.carte.focus{border-color:#edcda0;background:#2b2a22;-webkit-transform:scale(1.04);transform:scale(1.04)}
+.carte.joue p{color:#dec18c}
+.carte.joue p:before{content:'♪ '}
+#moteur{position:fixed;right:16px;bottom:6px;margin:0;font-size:14px;color:#55574f}
