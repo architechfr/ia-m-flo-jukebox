@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920">
+<title>IA-M.Flo · Le jukebox TV</title>
+<link rel="icon" type="image/svg+xml" href="/assets/ia-m-flo-logo-square.svg">
+<link rel="stylesheet" href="/tv/tv.css">
+</head>
+<body>
+<header>
+  <img class="logo" src="/assets/ia-m-flo-logo.svg" alt="IA-M.Flo · Le jukebox">
+  <p class="aide">◀ ▶ ▲ ▼ choisir · OK écouter / pause</p>
+</header>
+<section class="scene">
+  <div class="ecran"><div id="player"></div><p id="attente">Choisis une chanson et appuie sur OK.</p></div>
+  <div class="infos">
+    <p class="surtitre">À L’ÉCOUTE</p>
+    <h1 id="titre">IA-M.Flo</h1>
+    <p id="sortie">Le jukebox</p>
+    <p id="etat" role="status"></p>
+  </div>
+</section>
+<section id="liste"><div id="cartes"></div></section>
+<p id="moteur"></p>
+<script src="/tv/tv.js"></script>
+</body>
+</html>

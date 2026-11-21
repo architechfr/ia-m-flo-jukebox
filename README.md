@@ -11,3 +11,8 @@ La lecture et le rendu 3D doivent être vérifiés sur téléphone après public
 Toutes les 3 heures, GitHub Actions lit la chaîne YouTube et ajoute les nouveaux titres en tête du catalogue (`catalogue.json` et `releases.js`), puis Vercel redéploie.
 Pour forcer tout de suite : onglet **Actions** → « Nouvelles chansons YouTube » → **Run workflow**.
 Script : `scripts/sync-youtube.mjs` (chaînes surveillées et mots ignorés en haut du fichier).
+
+## Version TV (Samsung)
+
+Page TV sans le jukebox 3D, pilotée à la télécommande : `tv/` (en ligne sur `/tv/`).
+Appli à installer sur la TV : `tizen/`, mode d'emploi dans `tizen/README.md`.
