@@ -1,5 +1,54 @@
 [
   {
+    "id": "OLAK5uy_kUILZ46PVeWroKcSiU2D0ObPEVefm1-Fk",
+    "title": "Le miroir des Hommes",
+    "kind": "Album",
+    "date": "2026-11-28",
+    "cover": "https://i.ytimg.com/vi/itkPP98rXqw/hqdefault.jpg",
+    "tracks": [
+      {
+        "id": "itkPP98rXqw",
+        "title": "Je reviens te chercher"
+      },
+      {
+        "id": "AKreoZlMrAg",
+        "title": "Le roi qui portait mon nom"
+      },
+      {
+        "id": "1NIwXr8HeSA",
+        "title": "Vous n'aurez pas nos Coeurs"
+      },
+      {
+        "id": "jyztAXl1Q4Y",
+        "title": "Qui tient l’écran ?"
+      },
+      {
+        "id": "dDnTzp6pYdM",
+        "title": "Le Roi a fui"
+      },
+      {
+        "id": "KC0LKGWYb1s",
+        "title": "Le Réveil"
+      },
+      {
+        "id": "BgDi-9FE2PU",
+        "title": "Les mains derrière le feu"
+      },
+      {
+        "id": "eZ26f33wGl0",
+        "title": "Le roi est mort de rire (Radio Edit)"
+      },
+      {
+        "id": "pFzf-voehJQ",
+        "title": "Au plus profond de ton coeur"
+      },
+      {
+        "id": "SAMOJtrafWk",
+        "title": "Si j'avais tous les pouvoirs (Radio Edit)"
+      }
+    ]
+  },
+  {
     "id": "OLAK5uy_nntjkqe4KmQrNFrL4dPZsk5UN1rvS6YrQ",
     "title": "Rien ne va plus",
     "kind": "Album",
